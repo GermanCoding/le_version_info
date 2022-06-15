@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <script src="./jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="./bootstrap.min.css"/>
+</head>
+<body>
+<div class="px-4 py-5 text-center col-lg-6 mx-auto">
+<h3>Boulder version history</h3>
+This is a small page that shows the history of the Boulder versions deployed at https://letsencrypt.org/ (both production and staging). It shows when a given version was first and last seen.
+
+<h4 class="py-2">Why?</h4>
+I don't know (yet). I simply thought this would be fun. Maybe it will be useful one day, maybe not. In any case, you can hopefully figure out the update schedules Let's Encrypt uses via this data.
+The data is currently updated hourly. The code for this is hosted <a href="https://github.com/GermanCoding/le_version_info">on GitHub</a>.<p/>
+
+You can pull raw data (JSON format) for production <a href="./prod.json">here</a> and for staging <a href="./staging.json">here</a>. You may use this data for research purposes (if you're unsure
+about your use case, ask me - contact info should be on my blog).
+
+<h4 class="py-2">Production Boulder version history</h4>
+
+<table class="table">
+<tr>
+ <th scope="col">Build</th>
+ <th scope="col">First seen</th>
+ <th scope="col">Last seen</th>
+</tr>
+<tbody id="prod">
+</tbody>
+</table>
+
+<h4 class="py-2">Staging Boulder version history</h4>
+
+<table class="table">
+<tr>
+ <th scope="col">Build</th>
+ <th scope="col">First seen</th>
+ <th scope="col">Last seen</th>
+</tr>
+<tbody id="staging">
+</tbody>
+</table>
+
+</div>
+
+<script>
+$.getJSON('./prod.json', function(data) {
+  var table = $("#prod");
+  body_row = [];
+
+$.each(data, function(index, item) {
+      body_row[index] = '<tr><td>' + item.build + '</td><td>' + item.first_seen + '</td><td>' + (item.last_seen ? item.last_seen : 'now') + '</td></tr>';
+});
+
+table.append(body_row)
+});
+
+$.getJSON('./staging.json', function(data) {
+  var table = $("#staging");
+  body_row = [];
+
+$.each(data, function(index, item) {
+      body_row[index] = '<tr><td>' + item.build + '</td><td>' + item.first_seen + '</td><td>' + (item.last_seen ? item.last_seen : 'now') + '</td></tr>';
+});
+
+table.append(body_row)
+});
+</script>
+</body>
+</html>
