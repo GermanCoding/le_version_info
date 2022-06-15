@@ -25,12 +25,12 @@ struct BuildInfo {
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args: Vec<_> = std::env::args().collect();
-    if args.len() < 2 {
+    if args.len() < 3 {
         println!("{HELP}");
         exit(0);
     }
-    let file_name = args.get(0).unwrap();
-    let url = args.get(1).unwrap();
+    let file_name = args.get(1).unwrap();
+    let url = args.get(2).unwrap();
 
     let now = Utc::now().trunc_subsecs(0);
     let file = OpenOptions::new().read(true).open(&file_name)?;
