@@ -1,8 +1,8 @@
-use std::fs::{OpenOptions};
-use std::io::{BufReader, BufWriter};
-use std::process::exit;
 use chrono::{DateTime, SubsecRound, Utc};
 use serde::{Deserialize, Serialize};
+use std::fs::OpenOptions;
+use std::io::{BufReader, BufWriter};
+use std::process::exit;
 
 const HELP: &str = "\
 le_version_info
@@ -46,11 +46,19 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         search_build.pop();
     }
 
-    let current = match build_list.iter_mut().enumerate().find(|(_, candidate)| candidate.last_seen == None) {
-        None => { None }
-        Some((index, _)) => { Some(index) }
+    let current = match build_list
+        .iter_mut()
+        .enumerate()
+        .rfind(|(_, candidate)| candidate.last_seen == None)
+    {
+        None => None,
+        Some((index, _)) => Some(index),
     };
-    let (new_index, _) = match build_list.iter_mut().enumerate().find(|(_, candidate)| candidate.build.eq(&search_build)) {
+    let (new_index, _) = match build_list
+        .iter_mut()
+        .enumerate()
+        .rfind(|(_, candidate)| candidate.build.eq(&search_build))
+    {
         None => {
             let new = BuildInfo {
                 build: search_build,
