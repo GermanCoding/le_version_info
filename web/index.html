@@ -7,10 +7,11 @@
     <meta name="color-scheme" content="light dark">
     <meta name="theme-color" content="#111111" media="(prefers-color-scheme: light)">
     <meta name="theme-color" content="#eeeeee" media="(prefers-color-scheme: dark)">
-    <script type="text/javascript" src="js/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" type="text/css" href="css/bootstrap-dark.min.css">
     <link rel="stylesheet" type="text/css" href="css/datatables.min.css"/>
+    <script type="text/javascript" src="js/jquery-3.6.0.min.js"></script>
     <script type="text/javascript" src="js/datatables.min.js"></script>
+    <script type="text/javascript" src="js/table-script.js"></script>
 </head>
 <body>
 <div class="px-4 py-5 text-center col-lg-6 mx-auto">
@@ -58,21 +59,5 @@
     </table>
 
 </div>
-
-<script type="text/javascript">
-    for (const endpoint of ["prod", "staging"]) {
-        $.getJSON('./' + endpoint + '.json', function (data) {
-            let table = $("#" + endpoint + "-body");
-            let body_row = [];
-
-            $.each(data.reverse(), function (index, item) {
-                body_row[index] = '<tr><td>' + item.build + '</td><td>' + item.first_seen + '</td><td>' + (item.last_seen ? item.last_seen : 'now') + '</td></tr>';
-            });
-
-            table.append(body_row);
-            $("#" + endpoint).DataTable({"ordering": false});
-        });
-    }
-</script>
 </body>
 </html>
