@@ -1,2 +1,4 @@
 /target
 .idea
+web/prod.json
+web/staging.json
