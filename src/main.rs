@@ -16,6 +16,14 @@ ARGS:
                         https://acme-v02.api.letsencrypt.org/build
 ";
 
+const INFO: &str = concat!(
+    env!("CARGO_PKG_NAME"),
+    "/",
+    env!("CARGO_PKG_VERSION"),
+    " +",
+    env!("CARGO_PKG_REPOSITORY")
+);
+
 #[derive(Serialize, Deserialize, Debug, Eq, PartialEq, Clone)]
 struct BuildInfo {
     build: String,
@@ -31,12 +39,18 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
     let file_name = args.get(1).unwrap();
     let url = args.get(2).unwrap();
+    let client = reqwest::blocking::ClientBuilder::new()
+        .user_agent(INFO)
+        .build()?;
 
     let now = Utc::now().trunc_subsecs(0);
     let file = OpenOptions::new().read(true).open(&file_name)?;
     let reader = BufReader::new(file);
     let mut build_list: Vec<BuildInfo> = serde_json::from_reader(reader)?;
-    let mut search_build = reqwest::blocking::get(url)?
+    let mut search_build = client
+        .get(url)
+        .send()?
+        .error_for_status()?
         .text()?
         .trim()
         .replacen("Boulder=(", "", 1)

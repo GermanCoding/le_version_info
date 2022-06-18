@@ -1,6 +1,8 @@
 [package]
 name = "le_version_info"
-version = "0.1.0"
+version = "0.2.0"
+repository = "https://github.com/GermanCoding/le_version_info"
+license = "MIT"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
