@@ -2,3 +2,7 @@
 .idea
 web/prod.json
 web/staging.json
+web/js/jquery-*
+web/css/bootstrap*
+web/css/datatables*
+web/js/datatables*
