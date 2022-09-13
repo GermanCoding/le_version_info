@@ -1,7 +1,8 @@
 use chrono::{DateTime, SubsecRound, Utc};
 use serde::{Deserialize, Serialize};
+use std::fmt::Debug;
 use std::fs::OpenOptions;
-use std::io::{BufReader, BufWriter};
+use std::io::{BufReader, BufWriter, Error, ErrorKind};
 use std::process::exit;
 
 const HELP: &str = "\
@@ -47,15 +48,16 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let file = OpenOptions::new().read(true).open(&file_name)?;
     let reader = BufReader::new(file);
     let mut build_list: Vec<BuildInfo> = serde_json::from_reader(reader)?;
-    let mut search_build = client
-        .get(url)
-        .send()?
-        .error_for_status()?
-        .text()?
-        .trim()
-        .replacen("Boulder=(", "", 1)
-        .trim()
-        .to_string();
+    let response = client.get(url).send()?;
+    let status = response.status();
+    let body = response.text()?;
+    if !status.is_success() {
+        eprintln!("Invalid HTTP response:");
+        eprintln!("{}", status);
+        eprintln!("{}", body);
+        Err(Error::new(ErrorKind::Other, "Aborting due to invalid HTTP response"))?;
+    }
+    let mut search_build = body.trim().replacen("Boulder=(", "", 1).trim().to_string();
     if search_build.ends_with(")") {
         search_build.pop();
     }
