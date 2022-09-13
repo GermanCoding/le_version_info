@@ -1,6 +1,6 @@
 [package]
 name = "le_version_info"
-version = "0.2.0"
+version = "0.2.1"
 repository = "https://github.com/GermanCoding/le_version_info"
 license = "MIT"
 edition = "2021"
