@@ -53,9 +53,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let body = response.text()?;
     if !status.is_success() {
         eprintln!("Invalid HTTP response:");
-        eprintln!("{}", status);
-        eprintln!("{}", body);
-        Err(Error::new(ErrorKind::Other, "Aborting due to invalid HTTP response"))?;
+        eprintln!("{status}");
+        eprintln!("{body}");
+        Err(Error::new(
+            ErrorKind::Other,
+            "Aborting due to invalid HTTP response",
+        ))?;
     }
     let mut search_build = body.trim().replacen("Boulder=(", "", 1).trim().to_string();
     if search_build.ends_with(")") {
